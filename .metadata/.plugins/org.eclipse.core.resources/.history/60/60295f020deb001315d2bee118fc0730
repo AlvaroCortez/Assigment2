@@ -1,0 +1,31 @@
+package com.assigment2.audioplayer;
+
+import android.support.v7.app.ActionBarActivity;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+
+public class MediaPlayerActivity extends ActionBarActivity implements OnClickListener {
+
+	MediaPlayer mediaPlayer;
+	
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.media_player_layout);
+        if (savedInstanceState==null){
+        	mediaPlayer = MediaPlayer.create(this, R.raw.wolfs);
+        } else{
+        	
+        }
+    }
+
+	@Override
+	public void onClick(View v) {
+		if (mediaPlayer==null){
+			return;
+		}
+	}
+
+}
