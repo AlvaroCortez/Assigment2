@@ -19,7 +19,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements OnClickLis
 	private int saveCurrentPosition;
 	private final static String POSITION = "currentPosition";
 	private final static String PLAY = "isPlayed";
-	private boolean playable;
+	private boolean Playable;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +29,12 @@ public class MediaPlayerActivity extends ActionBarActivity implements OnClickLis
         mediaButton.setOnClickListener(this);
         mediaText = (TextView)findViewById(R.id.status_text);
         mediaPlayer = MediaPlayer.create(this, R.raw.wolfs);
-        if (savedInstanceState == null){
+        if (savedInstanceState==null){
         	mediaPlayer.seekTo(0);
         } else if (savedInstanceState != null && savedInstanceState.containsKey(POSITION) && savedInstanceState.containsKey(PLAY)){
         	mediaPlayer.seekTo(savedInstanceState.getInt(POSITION));
-        	playable = savedInstanceState.getBoolean(PLAY);
-        	if (savedInstanceState.getInt(POSITION)==0){
-        		mediaButton.setText("Play");
-        		mediaText.setText("Status:Idle");
-        	} else if (playable){
+        	Playable= savedInstanceState.getBoolean(PLAY);
+        	if (Playable){
         		mediaPlayer.start();
         		mediaButton.setText("Pause");
         		mediaText.setText("Status:Played");
@@ -50,7 +47,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements OnClickLis
 
 	@Override
 	public void onClick(View v) {
-		if (mediaPlayer == null){
+		if (mediaPlayer==null){
 			return;
 		} else if(mediaPlayer.isPlaying()){
 			mediaPlayer.pause();
@@ -81,9 +78,9 @@ public class MediaPlayerActivity extends ActionBarActivity implements OnClickLis
 	public void onSaveInstanceState(Bundle saveInstanceState) {
 		super.onSaveInstanceState(saveInstanceState);
 		saveCurrentPosition = mediaPlayer.getCurrentPosition();
-		playable = mediaPlayer.isPlaying();
+		Playable = mediaPlayer.isPlaying();
 		saveInstanceState.putInt(POSITION, saveCurrentPosition);
-		saveInstanceState.putBoolean(PLAY, playable);
+		saveInstanceState.putBoolean(PLAY, Playable);
 	}
 	
 	public void onStop(){
