@@ -26,7 +26,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	private boolean playable;
 	private float volumeLeft = 0.4f;
 	private float volumeRight = 0.4f;
-	private final static int ZERO = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			}
 		});
 		if (savedInstanceState == null) {
-			mediaPlayer.seekTo(ZERO);
+			mediaPlayer.seekTo(0);
 			mediaPlayer.setVolume(volumeLeft, volumeRight);
 		} else if (savedInstanceState != null
 				&& savedInstanceState.containsKey(POSITION)
@@ -66,7 +65,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			playable = savedInstanceState.getBoolean(PLAY);
 			mediaPlayer.setVolume(savedInstanceState.getFloat(VOLUME_LEFT),
 					savedInstanceState.getFloat(VOLUME_RIGHT));
-			if (savedInstanceState.getInt(POSITION) == ZERO) {
+			if (savedInstanceState.getInt(POSITION) == 0) {
 				mediaButton.setText("Play");
 				mediaText.setText("Status:Idle");
 			} else if (playable) {
@@ -112,10 +111,10 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			if (mediaPlayer != null) {
 				volumeLeft -= 0.1f;
 				volumeRight -= 0.1f;
-				if (volumeLeft < ZERO || volumeRight < ZERO) {
-					volumeLeft = ZERO;
-					volumeRight = ZERO;
-					mediaPlayer.setVolume(ZERO, ZERO);
+				if (volumeLeft < 0 || volumeRight < 0) {
+					volumeLeft = 0;
+					volumeRight = 0;
+					mediaPlayer.setVolume(0, 0);
 				}
 				mediaPlayer.setVolume(volumeLeft, volumeRight);
 			}
@@ -125,11 +124,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 
 	public void onStart() {
 		super.onStart();
-	}
-	public void onPause(){
-		super.onPause();
-		mediaPlayer.start();
-		mediaPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onSaveInstanceState(Bundle saveInstanceState) {

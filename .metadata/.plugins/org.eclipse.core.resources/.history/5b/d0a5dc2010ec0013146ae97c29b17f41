@@ -37,27 +37,18 @@
 
     <ImageButton
         android:id="@+id/imageButton_volume_plus"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/audio_button"
         android:src="@drawable/plus" />
 
     <ImageButton
         android:id="@+id/imageButton_volume_minus"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/audio_button"
         android:src="@drawable/minus" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/volume_text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

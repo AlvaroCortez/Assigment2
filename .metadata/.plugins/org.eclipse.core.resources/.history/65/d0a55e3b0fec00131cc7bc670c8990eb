@@ -21,12 +21,9 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	private int saveCurrentPosition;
 	private final static String POSITION = "currentPosition";
 	private final static String PLAY = "isPlayed";
-	private final static String VOLUME_LEFT = "leftVolume";
-	private final static String VOLUME_RIGHT = "rightVolume";
 	private boolean playable;
 	private float volumeLeft = 0.4f;
 	private float volumeRight = 0.4f;
-	private final static int ZERO = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +37,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		imageButtonVolumeMinus.setOnClickListener(this);
 		mediaText = (TextView) findViewById(R.id.status_text);
 		mediaPlayer = MediaPlayer.create(this, R.raw.tensec);
+		mediaPlayer.setVolume(volumeLeft, volumeRight);
 		mediaPlayer.setScreenOnWhilePlaying(true);
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
@@ -55,18 +53,13 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			}
 		});
 		if (savedInstanceState == null) {
-			mediaPlayer.seekTo(ZERO);
-			mediaPlayer.setVolume(volumeLeft, volumeRight);
+			mediaPlayer.seekTo(0);
 		} else if (savedInstanceState != null
 				&& savedInstanceState.containsKey(POSITION)
-				&& savedInstanceState.containsKey(PLAY)
-				&& savedInstanceState.containsKey(VOLUME_LEFT)
-				&& savedInstanceState.containsKey(VOLUME_RIGHT)) {
+				&& savedInstanceState.containsKey(PLAY)) {
 			mediaPlayer.seekTo(savedInstanceState.getInt(POSITION));
 			playable = savedInstanceState.getBoolean(PLAY);
-			mediaPlayer.setVolume(savedInstanceState.getFloat(VOLUME_LEFT),
-					savedInstanceState.getFloat(VOLUME_RIGHT));
-			if (savedInstanceState.getInt(POSITION) == ZERO) {
+			if (savedInstanceState.getInt(POSITION) == 0) {
 				mediaButton.setText("Play");
 				mediaText.setText("Status:Idle");
 			} else if (playable) {
@@ -112,10 +105,10 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			if (mediaPlayer != null) {
 				volumeLeft -= 0.1f;
 				volumeRight -= 0.1f;
-				if (volumeLeft < ZERO || volumeRight < ZERO) {
-					volumeLeft = ZERO;
-					volumeRight = ZERO;
-					mediaPlayer.setVolume(ZERO, ZERO);
+				if (volumeLeft < 0 || volumeRight < 0) {
+					volumeLeft = 0;
+					volumeRight = 0;
+					mediaPlayer.setVolume(0, 0);
 				}
 				mediaPlayer.setVolume(volumeLeft, volumeRight);
 			}
@@ -126,11 +119,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	public void onStart() {
 		super.onStart();
 	}
-	public void onPause(){
-		super.onPause();
-		mediaPlayer.start();
-		mediaPlayer.setVolume(volumeLeft, volumeRight);
-	}
 
 	public void onSaveInstanceState(Bundle saveInstanceState) {
 		super.onSaveInstanceState(saveInstanceState);
@@ -138,8 +126,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		playable = mediaPlayer.isPlaying();
 		saveInstanceState.putInt(POSITION, saveCurrentPosition);
 		saveInstanceState.putBoolean(PLAY, playable);
-		saveInstanceState.putFloat(VOLUME_LEFT, volumeLeft);
-		saveInstanceState.putFloat(VOLUME_RIGHT, volumeRight);
 	}
 
 	public void onStop() {
