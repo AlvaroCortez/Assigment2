@@ -1,0 +1,16 @@
+package com.assigment2.audioplayer;
+
+public class AudioPlayerSingleton {
+
+	private AudioPlayerSingleton(){
+		
+	}
+	
+	private static class AudioPlayerSingletonHolder{
+		private final static AudioPlayerSingleton audioPlayerInstance = new AudioPlayerSingleton();
+	}
+	
+	public static AudioPlayerSingleton getAudioPlayerInstance(){
+		return AudioPlayerSingletonHolder.audioPlayerInstance;
+	}
+}

@@ -2,11 +2,14 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="android.widget.Button"/>
-<fullyQualifiedTypeName name="android.media.MediaPlayer"/>
-<fullyQualifiedTypeName name="com.assigment2.audioplayer.R.raw"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="java.io.ObjectOutputStream.PutField"/>
 <fullyQualifiedTypeName name="android.media.AudioManager"/>
 <fullyQualifiedTypeName name="android.widget.ImageButton"/>
+<fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerSingleton.AudioPlayerSingletonHolder"/>
+<fullyQualifiedTypeName name="android.media.MediaPlayer"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.R.id"/>
+<fullyQualifiedTypeName name="android.content.Context"/>
+<fullyQualifiedTypeName name="com.assigment2.audioplayer.R.raw"/>
+<fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerSingleton"/>
 </qualifiedTypeNameHistroy>

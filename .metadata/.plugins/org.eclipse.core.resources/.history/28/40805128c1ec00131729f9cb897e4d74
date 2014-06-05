@@ -1,0 +1,8 @@
+package com.assigment2.audioplayer;
+
+public class AudioPlayerSingleton {
+
+	private AudioPlayerSingleton(){
+		
+	}
+}

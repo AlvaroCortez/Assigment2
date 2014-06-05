@@ -1,7 +1,6 @@
 package com.assigment2.audioplayer;
 
 import android.support.v7.app.ActionBarActivity;
-
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
