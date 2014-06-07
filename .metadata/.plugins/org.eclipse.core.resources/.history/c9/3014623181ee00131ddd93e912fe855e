@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class MediaPlayerActivity extends ActionBarActivity implements
 		OnClickListener {
 
-	// MediaPlayer mediaPlayer = new MediaPlayer();
+	//MediaPlayer mediaPlayer = new MediaPlayer();
 	Button mediaButton;
 	TextView mediaText;
 	ImageButton imageButtonVolumePlus, imageButtonVolumeMinus;
@@ -24,7 +24,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	// private final static String PLAY = "isPlayed";
 	// private final static String VOLUME_LEFT = "leftVolume";
 	// private final static String VOLUME_RIGHT = "rightVolume";
-	// private boolean playable;
+	private boolean playable;
 	private float volumeLeft = 0.4f;
 	private float volumeRight = 0.4f;
 	private final static int ZERO = 0;
@@ -34,7 +34,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// audioPlayer.setContext(this);//!
+		//audioPlayer.setContext(this);//!
 		setContentView(R.layout.media_player_layout);
 		mediaButton = (Button) findViewById(R.id.audio_button);
 		mediaButton.setOnClickListener(this);
@@ -80,6 +80,13 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		 * mediaText.setText("Status:Played"); } else {
 		 * mediaButton.setText("Play"); mediaText.setText("Status:Paused"); } }
 		 */
+		if (playable) {
+			mediaButton.setText("Pause");
+			mediaText.setText("Status:Played");
+		} else {
+			mediaButton.setText("Play");
+			mediaText.setText("Status:Paused");
+		}
 	}
 
 	@Override
@@ -128,7 +135,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	public void onStart() {
 		super.onStart();
 		audioPlayer.setVolume(volumeLeft, volumeRight);
-		if (audioPlayer.isPlaying()) {
+		if (playable) {
 			mediaButton.setText("Pause");
 			mediaText.setText("Status:Played");
 		} else {
@@ -145,7 +152,8 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		super.onPause();
 		volumeLeft = audioPlayer.getLeftVolumeCanal();
 		volumeRight = audioPlayer.getRightVolumeCanal();
-		// audioPlayer.play();//play on change screen orientation
+		playable = audioPlayer.isPlaying();
+		//audioPlayer.play();//play on change screen orientation  
 		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
@@ -163,6 +171,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		super.onStop();
 		volumeLeft = audioPlayer.getLeftVolumeCanal();
 		volumeRight = audioPlayer.getRightVolumeCanal();
+		playable = audioPlayer.isPlaying();
 		// if (mediaPlayer != null) {
 		// mediaPlayer.release();
 		// mediaPlayer = null;
@@ -173,6 +182,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		super.onDestroy();
 		volumeLeft = audioPlayer.getLeftVolumeCanal();
 		volumeRight = audioPlayer.getRightVolumeCanal();
-		// audioPlayer.dispose();
+		//audioPlayer.dispose();
 	}
 }

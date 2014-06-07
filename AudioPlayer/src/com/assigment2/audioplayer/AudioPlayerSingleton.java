@@ -5,75 +5,78 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 public class AudioPlayerSingleton {
-	
-	MediaPlayer mediaPlayer;// = MediaPlayer.create(getContext(), R.raw.tensec);//;
+
+	MediaPlayer mediaPlayer = null;// = MediaPlayer.create(getContext(),
+									// R.raw.tensec);//;
 	private float leftVolumeCanal, rightVolumeCanal;
 	Context context;
 
-	private AudioPlayerSingleton(){
-		
+	private AudioPlayerSingleton() {
+
 	}
-	
-	private static class AudioPlayerSingletonHolder{
+
+	private static class AudioPlayerSingletonHolder {
 		private final static AudioPlayerSingleton audioPlayerInstance = new AudioPlayerSingleton();
 	}
-	
-	public static AudioPlayerSingleton getAudioPlayerInstance(){
+
+	public static AudioPlayerSingleton getAudioPlayerInstance() {
 		return AudioPlayerSingletonHolder.audioPlayerInstance;
 	}
-	
-	public void setContext(Context context){//!
-		this.context =context;
+
+	public void setContext(Context context) {// !
+		this.context = context;
 	}
-	
-	public Context getContext(){
+
+	public Context getContext() {
 		return context;
 	}
-	
-	public void create(Context context, int id){
-		mediaPlayer = MediaPlayer.create(context, id);
-		mediaPlayer.setScreenOnWhilePlaying(true);
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+	public void create(Context context, int id) {
+		if (mediaPlayer == null) {
+			mediaPlayer = MediaPlayer.create(context, id);
+			mediaPlayer.setScreenOnWhilePlaying(true);
+			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		}
 	}
-	
-	public void play(){
-		if (isPlaying()){
+
+	public void play() {
+		if (isPlaying()) {
 			return;
 		}
 		mediaPlayer.start();
 	}
-	
-	public void pause(){
+
+	public void pause() {
 		mediaPlayer.pause();
 	}
-	
-	public boolean isPlaying(){
+
+	public boolean isPlaying() {
 		return mediaPlayer.isPlaying();
 	}
-	
-	public void setVolume(float leftVolume, float rightVolume){
+
+	public void setVolume(float leftVolume, float rightVolume) {
 		mediaPlayer.setVolume(leftVolume, rightVolume);
 		leftVolumeCanal = leftVolume;
 		rightVolumeCanal = rightVolume;
 	}
-	
-	public float getLeftVolumeCanal(){
+
+	public float getLeftVolumeCanal() {
 		return leftVolumeCanal;
 	}
-	
-	public float getRightVolumeCanal(){
+
+	public float getRightVolumeCanal() {
 		return rightVolumeCanal;
 	}
-	
-	public void dispose(){
-		if (isPlaying()){
+
+	public void dispose() {
+		if (isPlaying()) {
 			mediaPlayer.stop();
 		}
 		mediaPlayer.release();
 		mediaPlayer = null;
 	}
-	
-	public void seekAudio(int currentPosition){// не факт что нужна
+
+	public void seekAudio(int currentPosition) {// не факт что нужна
 		mediaPlayer.seekTo(currentPosition);
 	}
 }

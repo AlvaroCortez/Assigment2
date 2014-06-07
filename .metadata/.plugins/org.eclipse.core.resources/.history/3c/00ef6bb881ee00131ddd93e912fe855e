@@ -80,6 +80,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		 * mediaText.setText("Status:Played"); } else {
 		 * mediaButton.setText("Play"); mediaText.setText("Status:Paused"); } }
 		 */
+		
 	}
 
 	@Override
