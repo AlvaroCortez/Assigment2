@@ -6,9 +6,8 @@ import android.media.MediaPlayer;
 
 public class AudioPlayerSingleton {
 	
-	MediaPlayer mediaPlayer;// = MediaPlayer.create(getContext(), R.raw.tensec);//;
+	MediaPlayer mediaPlayer;
 	private float leftVolumeCanal, rightVolumeCanal;
-	Context context;
 
 	private AudioPlayerSingleton(){
 		
@@ -20,14 +19,6 @@ public class AudioPlayerSingleton {
 	
 	public static AudioPlayerSingleton getAudioPlayerInstance(){
 		return AudioPlayerSingletonHolder.audioPlayerInstance;
-	}
-	
-	public void setContext(Context context){//!
-		this.context =context;
-	}
-	
-	public Context getContext(){
-		return context;
 	}
 	
 	public void create(Context context, int id){

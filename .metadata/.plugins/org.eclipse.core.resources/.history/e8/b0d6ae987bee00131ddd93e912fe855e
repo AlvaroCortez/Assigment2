@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class MediaPlayerActivity extends ActionBarActivity implements
 		OnClickListener {
 
-	//MediaPlayer mediaPlayer = new MediaPlayer();
+	MediaPlayer mediaPlayer = new MediaPlayer();
 	Button mediaButton;
 	TextView mediaText;
 	ImageButton imageButtonVolumePlus, imageButtonVolumeMinus;
@@ -34,7 +34,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//audioPlayer.setContext(this);//!
 		setContentView(R.layout.media_player_layout);
 		mediaButton = (Button) findViewById(R.id.audio_button);
 		mediaButton.setOnClickListener(this);
@@ -162,8 +161,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 
 	public void onDestroy() {
 		super.onDestroy();
-		volumeLeft = audioPlayer.getLeftVolumeCanal();
-		volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.dispose();
+		audioPlayer.dispose();
 	}
 }

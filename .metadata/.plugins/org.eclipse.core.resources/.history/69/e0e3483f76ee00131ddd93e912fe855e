@@ -2,6 +2,7 @@ package com.assigment2.audioplayer;
 
 import android.support.v7.app.ActionBarActivity;
 
+
 //import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -15,7 +16,7 @@ import android.widget.TextView;
 public class MediaPlayerActivity extends ActionBarActivity implements
 		OnClickListener {
 
-	//MediaPlayer mediaPlayer = new MediaPlayer();
+	MediaPlayer mediaPlayer = new MediaPlayer();
 	Button mediaButton;
 	TextView mediaText;
 	ImageButton imageButtonVolumePlus, imageButtonVolumeMinus;
@@ -24,7 +25,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	// private final static String PLAY = "isPlayed";
 	// private final static String VOLUME_LEFT = "leftVolume";
 	// private final static String VOLUME_RIGHT = "rightVolume";
-	// private boolean playable;
+	//private boolean playable;
 	private float volumeLeft = 0.4f;
 	private float volumeRight = 0.4f;
 	private final static int ZERO = 0;
@@ -34,7 +35,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//audioPlayer.setContext(this);//!
 		setContentView(R.layout.media_player_layout);
 		mediaButton = (Button) findViewById(R.id.audio_button);
 		mediaButton.setOnClickListener(this);
@@ -129,10 +129,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		super.onStart();
 		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
-	
-	public void onResume(){
-		super.onResume();
-	}
 
 	public void onPause() {
 		super.onPause();
@@ -162,8 +158,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 
 	public void onDestroy() {
 		super.onDestroy();
-		volumeLeft = audioPlayer.getLeftVolumeCanal();
-		volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.dispose();
+		audioPlayer.dispose();
 	}
 }

@@ -6,7 +6,7 @@ import android.media.MediaPlayer;
 
 public class AudioPlayerSingleton {
 	
-	MediaPlayer mediaPlayer;// = MediaPlayer.create(getContext(), R.raw.tensec);//;
+	MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.tensec);//;
 	private float leftVolumeCanal, rightVolumeCanal;
 	Context context;
 

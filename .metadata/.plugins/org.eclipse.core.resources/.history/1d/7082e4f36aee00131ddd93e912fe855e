@@ -1,14 +1,12 @@
 package com.assigment2.audioplayer;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 public class AudioPlayerSingleton {
 	
-	MediaPlayer mediaPlayer;// = MediaPlayer.create(getContext(), R.raw.tensec);//;
+	MediaPlayer mediaPlayer;
 	private float leftVolumeCanal, rightVolumeCanal;
-	Context context;
 
 	private AudioPlayerSingleton(){
 		
@@ -22,18 +20,12 @@ public class AudioPlayerSingleton {
 		return AudioPlayerSingletonHolder.audioPlayerInstance;
 	}
 	
-	public void setContext(Context context){//!
-		this.context =context;
-	}
-	
-	public Context getContext(){
-		return context;
-	}
+	/*public void create(MediaPlayer player, Context context, int id){
+		player = MediaPlayer.create(context, id);
+	}*/
 	
 	public void create(Context context, int id){
 		mediaPlayer = MediaPlayer.create(context, id);
-		mediaPlayer.setScreenOnWhilePlaying(true);
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 	}
 	
 	public void play(){
