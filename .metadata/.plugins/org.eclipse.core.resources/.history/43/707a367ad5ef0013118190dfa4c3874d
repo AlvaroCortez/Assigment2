@@ -15,15 +15,19 @@ import android.widget.TextView;
 public class MediaPlayerActivity extends ActionBarActivity implements
 		OnClickListener {
 
+	// MediaPlayer mediaPlayer = new MediaPlayer();
 	Button mediaButton;
 	TextView mediaText;
 	ImageButton imageButtonVolumePlus, imageButtonVolumeMinus;
+	// private int saveCurrentPosition;
+	// private final static String POSITION = "currentPosition";
+	// private final static String PLAY = "isPlayed";
+	// private final static String VOLUME_LEFT = "leftVolume";
+	// private final static String VOLUME_RIGHT = "rightVolume";
 	private boolean ended;
 	private float volumeLeft = 0.4f;
 	private float volumeRight = 0.4f;
 	private final static int ZERO = 0;
-	private final static float FULL_LEFT_VOLUME = 1f, FULL_RIGHT_VOLUME = 1f;
-	private final static float VOLUME_ADD = 0.1f;
 	AudioPlayerSingleton audioPlayer = AudioPlayerSingleton
 			.getAudioPlayerInstance();
 
@@ -31,6 +35,7 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		ended = audioPlayer.getEnded();
+		// audioPlayer.setContext(this);//!
 		setContentView(R.layout.media_player_layout);
 		mediaButton = (Button) findViewById(R.id.audio_button);
 		mediaButton.setOnClickListener(this);
@@ -39,6 +44,9 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		imageButtonVolumeMinus = (ImageButton) findViewById(R.id.imageButton_volume_minus);
 		imageButtonVolumeMinus.setOnClickListener(this);
 		mediaText = (TextView) findViewById(R.id.status_text);
+		// mediaPlayer = MediaPlayer.create(this, R.raw.tensec);
+		// mediaPlayer.setScreenOnWhilePlaying(true);
+		// mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mediaText.setText("Status:Idle");
 		audioPlayer.create(this, R.raw.tensec);
 		audioPlayer.mediaPlayer
@@ -46,15 +54,37 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 
 					@Override
 					public void onCompletion(MediaPlayer listener) {
+						/*
+						 * mediaPlayer.release(); mediaPlayer = null;
+						 * mediaPlayer =
+						 * MediaPlayer.create(getApplicationContext(),
+						 * R.raw.tensec);
+						 */
 						mediaButton.setText("Play");
 						mediaText.setText("Status:Idle");
 						ended = true;
 						audioPlayer.setEnded(ended);
 					}
 				});
-		volumeLeft = audioPlayer.getLeftVolumeCanal();
-		volumeRight = audioPlayer.getRightVolumeCanal();
 		audioPlayer.setVolume(volumeLeft, volumeRight);
+		/*
+		 * if (savedInstanceState == null) { mediaPlayer.seekTo(ZERO);
+		 * mediaPlayer.setVolume(volumeLeft, volumeRight); } else if
+		 * (savedInstanceState != null &&
+		 * savedInstanceState.containsKey(POSITION) &&
+		 * savedInstanceState.containsKey(PLAY) &&
+		 * savedInstanceState.containsKey(VOLUME_LEFT) &&
+		 * savedInstanceState.containsKey(VOLUME_RIGHT)) {
+		 * mediaPlayer.seekTo(savedInstanceState.getInt(POSITION)); playable =
+		 * savedInstanceState.getBoolean(PLAY);
+		 * mediaPlayer.setVolume(savedInstanceState.getFloat(VOLUME_LEFT),
+		 * savedInstanceState.getFloat(VOLUME_RIGHT)); if
+		 * (savedInstanceState.getInt(POSITION) == ZERO) {
+		 * mediaButton.setText("Play"); mediaText.setText("Status:Idle"); } else
+		 * if (playable) { mediaPlayer.start(); mediaButton.setText("Pause");
+		 * mediaText.setText("Status:Played"); } else {
+		 * mediaButton.setText("Play"); mediaText.setText("Status:Paused"); } }
+		 */
 	}
 
 	@Override
@@ -79,20 +109,20 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			break;
 		case R.id.imageButton_volume_plus:
 			if (audioPlayer.mediaPlayer != null) {
-				volumeLeft += VOLUME_ADD;
-				volumeRight += VOLUME_ADD;
-				if (volumeLeft > FULL_LEFT_VOLUME || volumeRight > FULL_RIGHT_VOLUME) {
-					volumeLeft = FULL_LEFT_VOLUME;
-					volumeRight = FULL_RIGHT_VOLUME;
-					audioPlayer.setVolume(FULL_LEFT_VOLUME, FULL_RIGHT_VOLUME);
+				volumeLeft += 0.1f;
+				volumeRight += 0.1f;
+				if (volumeLeft > 1 || volumeRight > 1) {
+					volumeLeft = 1.0f;
+					volumeRight = 1.0f;
+					audioPlayer.setVolume(1.0f, 1.0f);
 				}
 				audioPlayer.setVolume(volumeLeft, volumeRight);
 			}
 			break;
 		case R.id.imageButton_volume_minus:
 			if (audioPlayer.mediaPlayer != null) {
-				volumeLeft -= VOLUME_ADD;
-				volumeRight -= VOLUME_ADD;
+				volumeLeft -= 0.1f;
+				volumeRight -= 0.1f;
 				if (volumeLeft < ZERO || volumeRight < ZERO) {
 					volumeLeft = ZERO;
 					volumeRight = ZERO;
@@ -106,15 +136,18 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 
 	public void onStart() {
 		super.onStart();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		audioPlayer.setVolume(volumeLeft, volumeRight);
+		// if (audioPlayer.isPlaying()) {
+		// mediaButton.setText("Pause");
+		// mediaText.setText("Status:Played");
+		// } else {
+		// mediaButton.setText("Play");
+		// mediaText.setText("Status:Paused");
+		// }
 	}
 
 	public void onResume() {
 		super.onResume();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
 		if (audioPlayer.getEnded()) {
 			mediaButton.setText("Play");
 			mediaText.setText("Status:Idle");
@@ -125,27 +158,41 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			mediaButton.setText("Play");
 			mediaText.setText("Status:Paused");
 		}
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onPause() {
 		super.onPause();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
+		// audioPlayer.play();//play on change screen orientation
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
+
+	/*
+	 * public void onSaveInstanceState(Bundle saveInstanceState) {
+	 * super.onSaveInstanceState(saveInstanceState); saveCurrentPosition =
+	 * mediaPlayer.getCurrentPosition(); playable = mediaPlayer.isPlaying();
+	 * saveInstanceState.putInt(POSITION, saveCurrentPosition);
+	 * saveInstanceState.putBoolean(PLAY, playable);
+	 * saveInstanceState.putFloat(VOLUME_LEFT, volumeLeft);
+	 * saveInstanceState.putFloat(VOLUME_RIGHT, volumeRight); }
+	 */
 
 	public void onStop() {
 		super.onStop();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
+		// if (mediaPlayer != null) {
+		// mediaPlayer.release();
+		// mediaPlayer = null;
+		// }
 	}
 
 	public void onDestroy() {
 		super.onDestroy();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
+		// audioPlayer.dispose();
 	}
 }

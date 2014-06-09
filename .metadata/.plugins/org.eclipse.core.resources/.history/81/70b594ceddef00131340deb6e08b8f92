@@ -10,7 +10,7 @@ public class AudioPlayerSingleton {
 									// R.raw.tensec);//;
 	private float leftVolumeCanal = 0.4f, rightVolumeCanal = 0.4f;
 	Context context;
-	boolean ended = true;
+	boolean ended = false;
 
 	private AudioPlayerSingleton() {
 

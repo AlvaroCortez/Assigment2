@@ -52,8 +52,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 						audioPlayer.setEnded(ended);
 					}
 				});
-		volumeLeft = audioPlayer.getLeftVolumeCanal();
-		volumeRight = audioPlayer.getRightVolumeCanal();
 		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
@@ -106,15 +104,15 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 
 	public void onStart() {
 		super.onStart();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onResume() {
 		super.onResume();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
 		if (audioPlayer.getEnded()) {
 			mediaButton.setText("Play");
 			mediaText.setText("Status:Idle");
@@ -125,27 +123,27 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			mediaButton.setText("Play");
 			mediaText.setText("Status:Paused");
 		}
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onPause() {
 		super.onPause();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onStop() {
 		super.onStop();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
-	public void onDestroy() {
-		super.onDestroy();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
-	}
+	//public void onDestroy() {
+	//	super.onDestroy();
+	//	volumeLeft = audioPlayer.getLeftVolumeCanal();
+	//	volumeRight = audioPlayer.getRightVolumeCanal();
+	//	audioPlayer.setVolume(volumeLeft, volumeRight);
+	//}
 }

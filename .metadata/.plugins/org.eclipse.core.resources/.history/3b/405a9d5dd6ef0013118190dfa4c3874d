@@ -22,8 +22,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 	private float volumeLeft = 0.4f;
 	private float volumeRight = 0.4f;
 	private final static int ZERO = 0;
-	private final static float FULL_LEFT_VOLUME = 1f, FULL_RIGHT_VOLUME = 1f;
-	private final static float VOLUME_ADD = 0.1f;
 	AudioPlayerSingleton audioPlayer = AudioPlayerSingleton
 			.getAudioPlayerInstance();
 
@@ -52,8 +50,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 						audioPlayer.setEnded(ended);
 					}
 				});
-		volumeLeft = audioPlayer.getLeftVolumeCanal();
-		volumeRight = audioPlayer.getRightVolumeCanal();
 		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
@@ -79,20 +75,20 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			break;
 		case R.id.imageButton_volume_plus:
 			if (audioPlayer.mediaPlayer != null) {
-				volumeLeft += VOLUME_ADD;
-				volumeRight += VOLUME_ADD;
-				if (volumeLeft > FULL_LEFT_VOLUME || volumeRight > FULL_RIGHT_VOLUME) {
-					volumeLeft = FULL_LEFT_VOLUME;
-					volumeRight = FULL_RIGHT_VOLUME;
-					audioPlayer.setVolume(FULL_LEFT_VOLUME, FULL_RIGHT_VOLUME);
+				volumeLeft += 0.1f;
+				volumeRight += 0.1f;
+				if (volumeLeft > 1 || volumeRight > 1) {
+					volumeLeft = 1.0f;
+					volumeRight = 1.0f;
+					audioPlayer.setVolume(1.0f, 1.0f);
 				}
 				audioPlayer.setVolume(volumeLeft, volumeRight);
 			}
 			break;
 		case R.id.imageButton_volume_minus:
 			if (audioPlayer.mediaPlayer != null) {
-				volumeLeft -= VOLUME_ADD;
-				volumeRight -= VOLUME_ADD;
+				volumeLeft -= 0.1f;
+				volumeRight -= 0.1f;
 				if (volumeLeft < ZERO || volumeRight < ZERO) {
 					volumeLeft = ZERO;
 					volumeRight = ZERO;
@@ -106,15 +102,11 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 
 	public void onStart() {
 		super.onStart();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onResume() {
 		super.onResume();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
 		if (audioPlayer.getEnded()) {
 			mediaButton.setText("Play");
 			mediaText.setText("Status:Idle");
@@ -125,27 +117,25 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 			mediaButton.setText("Play");
 			mediaText.setText("Status:Paused");
 		}
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onPause() {
 		super.onPause();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
+		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
 	public void onStop() {
 		super.onStop();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
 	}
 
 	public void onDestroy() {
 		super.onDestroy();
-		//volumeLeft = audioPlayer.getLeftVolumeCanal();
-		//volumeRight = audioPlayer.getRightVolumeCanal();
-		//audioPlayer.setVolume(volumeLeft, volumeRight);
+		volumeLeft = audioPlayer.getLeftVolumeCanal();
+		volumeRight = audioPlayer.getRightVolumeCanal();
 	}
 }

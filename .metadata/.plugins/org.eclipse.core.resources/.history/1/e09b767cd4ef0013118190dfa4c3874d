@@ -8,9 +8,8 @@ public class AudioPlayerSingleton {
 
 	MediaPlayer mediaPlayer = null;// = MediaPlayer.create(getContext(),
 									// R.raw.tensec);//;
-	private float leftVolumeCanal = 0.4f, rightVolumeCanal = 0.4f;
+	private float leftVolumeCanal, rightVolumeCanal;
 	Context context;
-	boolean ended = true;
 
 	private AudioPlayerSingleton() {
 
@@ -77,11 +76,7 @@ public class AudioPlayerSingleton {
 		mediaPlayer = null;
 	}
 
-	public boolean getEnded(){
-		return ended;
-	}
-	
-	public void setEnded(boolean end){
-		ended = end;
+	public void seekAudio(int currentPosition) {// не факт что нужна
+		mediaPlayer.seekTo(currentPosition);
 	}
 }

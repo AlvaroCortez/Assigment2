@@ -7,9 +7,10 @@
 <fullyQualifiedTypeName name="android.media.AudioManager"/>
 <fullyQualifiedTypeName name="android.widget.ImageButton"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerSingleton.AudioPlayerSingletonHolder"/>
-<fullyQualifiedTypeName name="android.media.MediaPlayer"/>
-<fullyQualifiedTypeName name="com.assigment2.audioplayer.R.id"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.R.raw"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerSingleton"/>
+<fullyQualifiedTypeName name="com.assigment2.audioplayer.MediaPlayerActivity"/>
+<fullyQualifiedTypeName name="android.media.MediaPlayer"/>
+<fullyQualifiedTypeName name="com.assigment2.audioplayer.R.id"/>
 </qualifiedTypeNameHistroy>

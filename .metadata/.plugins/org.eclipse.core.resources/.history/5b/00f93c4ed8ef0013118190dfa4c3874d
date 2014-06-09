@@ -52,8 +52,6 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 						audioPlayer.setEnded(ended);
 					}
 				});
-		volumeLeft = audioPlayer.getLeftVolumeCanal();
-		volumeRight = audioPlayer.getRightVolumeCanal();
 		audioPlayer.setVolume(volumeLeft, volumeRight);
 	}
 
