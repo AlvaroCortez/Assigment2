@@ -1,36 +1,78 @@
 package com.assigment2.audioplayer;
 
-import android.support.v7.app.ActionBarActivity;
-
-//import android.media.AudioManager;
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class MediaPlayerActivity extends ActionBarActivity implements
-		OnClickListener {
+public class MediaPlayerActivity extends Activity implements OnClickListener {
 
-	Button mediaButton;
-	TextView mediaText;
-	ImageButton imageButtonVolumePlus, imageButtonVolumeMinus;
-	private boolean ended;
-	private float volumeLeft = 0.4f;
-	private float volumeRight = 0.4f;
+	private Button mediaButton;
+	private TextView mediaText;
+	private ImageButton imageButtonVolumePlus;
+	private ImageButton imageButtonVolumeMinus;
+	private SeekBar seekbar;
+	private Intent intent;
+	private float volume = 0.4f;
 	private final static int ZERO = 0;
-	private final static float FULL_LEFT_VOLUME = 1f, FULL_RIGHT_VOLUME = 1f;
+	private final static int TEN = 100;
+	private final static float FULL_VOLUME = 1f;
 	private final static float VOLUME_ADD = 0.1f;
-	AudioPlayerSingleton audioPlayer = AudioPlayerSingleton
-			.getAudioPlayerInstance();
+	private AudioPlayerService audioPlayerService;
+	boolean isBound;
+	boolean ended = true;
+	private ServiceConnection serviceConnection = new ServiceConnection() {
+
+		public void onServiceConnected(ComponentName name, IBinder binder) {
+			audioPlayerService = ((AudioPlayerService.LocalBinder) binder)
+					.getService();
+			isBound = true;
+			audioPlayerService.getMediaPlayer().setOnCompletionListener(
+					new OnCompletionListener() {
+						@Override
+						public void onCompletion(MediaPlayer listener) {
+							mediaButton.setText("Play");
+							mediaText.setText("Status:Idle");
+							ended = true;
+							audioPlayerService.setEnded(ended);
+							doInitVolume();
+						}
+					});
+			if (audioPlayerService != null) {
+				doInitVolume();
+				if (audioPlayerService.getEnded()) {
+					mediaButton.setText("Play");
+					mediaText.setText("Status:Idle");
+				} else if (audioPlayerService.isPlaying()) {
+					mediaButton.setText("Pause");
+					mediaText.setText("Status:Playing");
+				} else {
+					mediaButton.setText("Play");
+					mediaText.setText("Status:Paused");
+				}
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName name) {
+			audioPlayerService = null;
+			isBound = false;
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ended = audioPlayer.getEnded();
 		setContentView(R.layout.media_player_layout);
 		mediaButton = (Button) findViewById(R.id.audio_button);
 		mediaButton.setOnClickListener(this);
@@ -40,81 +82,85 @@ public class MediaPlayerActivity extends ActionBarActivity implements
 		imageButtonVolumeMinus.setOnClickListener(this);
 		mediaText = (TextView) findViewById(R.id.status_text);
 		mediaText.setText("Status:Idle");
-		audioPlayer.create(this, R.raw.tensec);
-		audioPlayer.mediaPlayer
-				.setOnCompletionListener(new OnCompletionListener() {
+		seekbar = (SeekBar) findViewById(R.id.seekBar1);
+		seekbar.setClickable(false);
+		seekbar.setMax((int) (FULL_VOLUME * TEN));
+		seekbar.setProgress((int) (volume * TEN));
+		intent = new Intent(this, AudioPlayerService.class);
+	}
 
-					@Override
-					public void onCompletion(MediaPlayer listener) {
-						mediaButton.setText("Play");
-						mediaText.setText("Status:Idle");
-						ended = true;
-						audioPlayer.setEnded(ended);
-					}
-				});
-		volumeLeft = audioPlayer.getLeftVolumeCanal();
-		volumeRight = audioPlayer.getRightVolumeCanal();
-		audioPlayer.setVolume(volumeLeft, volumeRight);
+	public void onResume() {
+		super.onResume();
+		doBindService();
+	}
+
+	public void onPause() {
+		super.onPause();
+		doUnbindService();
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.audio_button:
-			if (audioPlayer.mediaPlayer == null) {
+			if (audioPlayerService.getMediaPlayer() == null) {
 				return;
-			} else if (audioPlayer.isPlaying()) {
-				audioPlayer.pause();
+			} else if (audioPlayerService.isPlaying() && isBound) {
+				startService(intent);
 				mediaButton.setText("Play");
 				mediaText.setText("Status:Paused");
 				ended = false;
-				audioPlayer.setEnded(ended);
-			} else if (!audioPlayer.isPlaying()) {
-				audioPlayer.play();
+				audioPlayerService.setEnded(ended);
+			} else if (!audioPlayerService.isPlaying() && isBound) {
+				startService(intent);
 				mediaButton.setText("Pause");
 				mediaText.setText("Status:Playing");
 				ended = false;
-				audioPlayer.setEnded(ended);
+				audioPlayerService.setEnded(ended);
 			}
 			break;
 		case R.id.imageButton_volume_plus:
-			if (audioPlayer.mediaPlayer != null) {
-				volumeLeft += VOLUME_ADD;
-				volumeRight += VOLUME_ADD;
-				if (volumeLeft > FULL_LEFT_VOLUME || volumeRight > FULL_RIGHT_VOLUME) {
-					volumeLeft = FULL_LEFT_VOLUME;
-					volumeRight = FULL_RIGHT_VOLUME;
-					audioPlayer.setVolume(FULL_LEFT_VOLUME, FULL_RIGHT_VOLUME);
+			if (audioPlayerService.getMediaPlayer() != null) {
+				volume += VOLUME_ADD;
+				if (volume > FULL_VOLUME) {
+					volume = FULL_VOLUME;
+					audioPlayerService.setVolume(FULL_VOLUME);
+					seekbar.setProgress((int) (FULL_VOLUME * TEN));
 				}
-				audioPlayer.setVolume(volumeLeft, volumeRight);
+				audioPlayerService.setVolume(volume);
+				seekbar.setProgress((int) (volume * TEN));
 			}
 			break;
 		case R.id.imageButton_volume_minus:
-			if (audioPlayer.mediaPlayer != null) {
-				volumeLeft -= VOLUME_ADD;
-				volumeRight -= VOLUME_ADD;
-				if (volumeLeft < ZERO || volumeRight < ZERO) {
-					volumeLeft = ZERO;
-					volumeRight = ZERO;
-					audioPlayer.setVolume(ZERO, ZERO);
+			if (audioPlayerService.getMediaPlayer() != null) {
+				volume -= VOLUME_ADD;
+				if (volume < ZERO) {
+					volume = ZERO;
+					audioPlayerService.setVolume(ZERO);
+					seekbar.setProgress((int) ZERO);
 				}
-				audioPlayer.setVolume(volumeLeft, volumeRight);
+				audioPlayerService.setVolume(volume);
+				seekbar.setProgress((int) (volume * TEN));
 			}
 			break;
 		}
 	}
 
-	public void onResume() {
-		super.onResume();
-		if (audioPlayer.getEnded()) {
-			mediaButton.setText("Play");
-			mediaText.setText("Status:Idle");
-		} else if (audioPlayer.isPlaying()) {
-			mediaButton.setText("Pause");
-			mediaText.setText("Status:Playing");
-		} else {
-			mediaButton.setText("Play");
-			mediaText.setText("Status:Paused");
+	public void doBindService() {
+		bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+		isBound = true;
+	}
+
+	public void doUnbindService() {
+		if (isBound) {
+			unbindService(serviceConnection);
+			isBound = false;
 		}
+	}
+	
+	public void doInitVolume(){
+		volume = audioPlayerService.getVolumeCanal();
+		audioPlayerService.setVolume(volume);
+		seekbar.setProgress((int) (volume * TEN));
 	}
 }

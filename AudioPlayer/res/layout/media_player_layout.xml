@@ -60,4 +60,13 @@
         android:text="@string/volume_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageButton_volume_minus"
+        android:clickable="false"
+        android:max="@android:integer/config_shortAnimTime" />
+
 </RelativeLayout>

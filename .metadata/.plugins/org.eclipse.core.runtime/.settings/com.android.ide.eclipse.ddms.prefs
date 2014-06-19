@@ -8,3 +8,4 @@ logcat.view.colsize.TID=62
 logcat.view.colsize.Tag=133
 logcat.view.colsize.Text=682
 logcat.view.colsize.Time=192
+logcat.view.filters.list=name\: 'MyFilter', tag\: 'Assigment2', text\: '', pid\: '', app\: '', level\: 'debug', 
