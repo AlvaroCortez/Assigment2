@@ -8,7 +8,6 @@
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerSingleton.AudioPlayerSingletonHolder"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerSingleton"/>
-<fullyQualifiedTypeName name="com.assigment2.audioplayer.MediaPlayerActivity"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.R.id"/>
 <fullyQualifiedTypeName name="android.media.MediaPlayer"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
@@ -16,9 +15,7 @@
 <fullyQualifiedTypeName name="android.media.AudioManager"/>
 <fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="android.app.Service"/>
-<fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="android.os.Binder"/>
-<fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerService"/>
 <fullyQualifiedTypeName name="android.content.ServiceConnection"/>
 <fullyQualifiedTypeName name="android.content.ComponentName"/>
 <fullyQualifiedTypeName name="android.os.IBinder"/>
@@ -27,4 +24,9 @@
 <fullyQualifiedTypeName name="android.widget.SeekBar"/>
 <fullyQualifiedTypeName name="android.media.MediaPlayer.OnCompletionListener"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerService.VolumeState"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerService"/>
+<fullyQualifiedTypeName name="android.content.BroadcastReceiver"/>
+<fullyQualifiedTypeName name="android.content.IntentFilter"/>
+<fullyQualifiedTypeName name="com.assigment2.audioplayer.MediaPlayerActivity"/>
 </qualifiedTypeNameHistroy>

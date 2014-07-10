@@ -1,14 +1,14 @@
 package com.assigment2.audioplayer;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,54 +30,43 @@ public class MediaPlayerActivity extends Activity implements OnClickListener {
 	private final static int FULL_VOLUME = 1;
 	private final static float VOLUME_ADD = 0.1f;
 	private AudioPlayerService audioPlayerService;
-	boolean isBound;
-	private static String TAG = "Assigment2";
-	// boolean ended = true;
+	private boolean isBound;
+	public final static String BROADCAST_ACTION = "action";
+	private BroadcastReceiver br = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			mediaButton.setText("Play");
+			mediaText.setText("Status:Idle");
+		}
+	};
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 
 		public void onServiceConnected(ComponentName name, IBinder binder) {
 			audioPlayerService = ((AudioPlayerService.LocalBinder) binder)
 					.getService();
 			isBound = true;
-			/*
-			 * audioPlayerService.getMediaPlayer().setOnCompletionListener( new
-			 * OnCompletionListener() {
-			 * 
-			 * @Override public void onCompletion(MediaPlayer listener) {
-			 * initUI(audioPlayerService.getState()); //
-			 * mediaButton.setText("Play"); // mediaText.setText("Status:Idle");
-			 * // ended = true; // audioPlayerService.setEnded(ended);
-			 * doInitVolume(); Log.d(TAG, "Activity OnComplitionListener"); }
-			 * });
-			 */
 			if (audioPlayerService != null) {
 				doInitVolume();
-				/*
-				 * if (audioPlayerService.getEnded()) {
-				 * mediaButton.setText("Play");
-				 * mediaText.setText("Status:Idle"); } else if
-				 * (audioPlayerService.isPlaying()) {
-				 * mediaButton.setText("Pause");
-				 * mediaText.setText("Status:Playing"); } else {
-				 * mediaButton.setText("Play");
-				 * mediaText.setText("Status:Paused"); }
-				 */
-				initUI(audioPlayerService.getState());
+				if(audioPlayerService.getState()==0){
+					mediaButton.setText("Play");
+					mediaText.setText("Status:Idle");
+				} else if (audioPlayerService.getState()==1){
+					initUI(2);
+				} else{
+					initUI(1);
+				}
 			}
-			Log.d(TAG, "Service Connected");
 		}
 
 		public void onServiceDisconnected(ComponentName name) {
 			audioPlayerService = null;
 			isBound = false;
-			Log.d(TAG, "Service Disconnected");
 		}
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "Activity Begin created");
 		setContentView(R.layout.media_player_layout);
 		mediaButton = (Button) findViewById(R.id.audio_button);
 		mediaButton.setOnClickListener(this);
@@ -92,83 +81,56 @@ public class MediaPlayerActivity extends Activity implements OnClickListener {
 		seekbar.setMax((int) (FULL_VOLUME * TEN));
 		seekbar.setProgress((int) (volume * TEN));
 		intent = new Intent(this, AudioPlayerService.class);
-		Log.d(TAG, "Activity End created");
+		IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+		registerReceiver(br, intFilt);
 	}
 
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG, "Activity onResumeBegin");
 		doBindService();
-		Log.d(TAG, "Activity onResumeEnd");
 	}
 
 	public void onPause() {
 		super.onPause();
-		Log.d(TAG, "Activity onPauseBegin");
 		doUnbindService();
-		Log.d(TAG, "Activity onPauseEnd");
 	}
 
 	@Override
 	public void onClick(View v) {
-		Log.d(TAG, "Activity onClick");
 		switch (v.getId()) {
 		case R.id.audio_button:
-			/*
-			 * if (audioPlayerService.getMediaPlayer() == null) { return; } else
-			 * if (audioPlayerService.isPlaying() && isBound) {
-			 * startService(intent); //mediaButton.setText("Play");
-			 * //mediaText.setText("Status:Paused"); //ended = false;
-			 * //audioPlayerService.setEnded(ended); } else if
-			 * (!audioPlayerService.isPlaying() && isBound) {
-			 * startService(intent); //mediaButton.setText("Pause");
-			 * //mediaText.setText("Status:Playing"); //ended = false;
-			 * //audioPlayerService.setEnded(ended); }
-			 */
 			if (isBound) {
 				switch (audioPlayerService.getState()) {
 				case 0:
 				case 1:
-					Log.d(TAG, "Clicked StartButton Begin");
 					startService(intent.putExtra("State", "ON"));
 					initUI(audioPlayerService.getState());
-					Log.d(TAG, "Clicked StartButton End");
 					break;
 				case 2:
-					Log.d(TAG, "Clicked PauseButton Begin");
 					startService(intent.putExtra("State", "OFF"));
 					initUI(audioPlayerService.getState());
-					Log.d(TAG, "Clicked PauseButton End");
 					break;
 				}
 			}
 			break;
 		case R.id.imageButton_volume_plus:
-			Log.d(TAG, "Clicked VolumePlustButton Begin");
 			setVolume(FULL_VOLUME);
-			Log.d(TAG, "Clicked VolumePlustButton End");
 			break;
 		case R.id.imageButton_volume_minus:
-			Log.d(TAG, "Clicked VolumeMinustButton Begin");
 			setVolume(ZERO);
-			Log.d(TAG, "Clicked VolumeMinustButton End");
 			break;
 		}
 	}
 
 	public void doBindService() {
-		Log.d(TAG, "doBindService Begin");
 		bindService(intent, serviceConnection, BIND_AUTO_CREATE);
 		isBound = true;
-		Log.d(TAG, "doBindService End");
 	}
 
 	public void doUnbindService() {
-		Log.d(TAG, "doUnBindService Begin");
 		if (isBound) {
 			unbindService(serviceConnection);
 			isBound = false;
-			Log.d(TAG, "doUnBindService End");
 		}
 	}
 
@@ -179,7 +141,6 @@ public class MediaPlayerActivity extends Activity implements OnClickListener {
 	}
 
 	private void setVolume(int state) {
-		// if (audioPlayerService.getMediaPlayer() != null) {
 		switch (state) {
 		case ZERO:
 			volume -= VOLUME_ADD;
@@ -202,25 +163,23 @@ public class MediaPlayerActivity extends Activity implements OnClickListener {
 		seekbar.setProgress((int) (volume * TEN));
 	}
 
-	// }
-
 	public void initUI(int state) {
-		switch (state) { // 0-IDLE 1-PAUSED 2-PLAYED
+		switch (state) { 
 		case 0:
-			Log.d(TAG, "Activity state Idle");
-			mediaButton.setText("Play");
-			mediaText.setText("Status:Idle");
-			break;
 		case 1:
-			Log.d(TAG, "Activity state Played");
 			mediaButton.setText("Pause");
 			mediaText.setText("Status:Playing");
 			break;
 		case 2:
-			Log.d(TAG, "Activity state Paused");
 			mediaButton.setText("Play");
 			mediaText.setText("Status:Paused");
 			break;
 		}
 	}
+	
+	 @Override
+	  protected void onDestroy() {
+	    super.onDestroy();
+	    unregisterReceiver(br);
+	  }
 }
