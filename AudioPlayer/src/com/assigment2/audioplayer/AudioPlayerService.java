@@ -1,5 +1,7 @@
 package com.assigment2.audioplayer;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -13,6 +15,8 @@ public class AudioPlayerService extends Service {
 	private final IBinder mBinder = new LocalBinder();
 	private MediaPlayer mediaPlayer = null;
 	private int state = 0;
+	private static int NOTIFICATION_ID = 1;
+	Notification notification;
 
 	enum VolumeState {
 		IDLE(0), PAUSED(1), PLAYED(2);
@@ -28,20 +32,32 @@ public class AudioPlayerService extends Service {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		if (notification == null) {
+			notification = new Notification(R.drawable.ic_launcher,
+					getText(R.string.app_name), System.currentTimeMillis());
+			Intent notificationIntent = new Intent(this,
+					MediaPlayerActivity.class);
+			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+					notificationIntent, 0);
+			notification.setLatestEventInfo(this, getText(R.string.text_mp3),
+					getText(R.string.app_name), pendingIntent);
+		}
 		if (mediaPlayer == null) {
 			mediaPlayer = MediaPlayer.create(this, R.raw.tensec);
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
 				public void onCompletion(MediaPlayer listener) {
+					stopForeground(true);
 					Intent i = new Intent(MediaPlayerActivity.BROADCAST_ACTION);
 					sendBroadcast(i);
 					setState(VolumeState.IDLE.getStateVolume());
 				}
-			});
+	});
 		}
 	}
 
@@ -63,6 +79,7 @@ public class AudioPlayerService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		startForeground(NOTIFICATION_ID, notification); 
 		String startCommand = intent.getStringExtra("State");
 		switch (startCommand) {
 		case "ON":
