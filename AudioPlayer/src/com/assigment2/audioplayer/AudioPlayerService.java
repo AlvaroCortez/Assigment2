@@ -79,14 +79,15 @@ public class AudioPlayerService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		startForeground(NOTIFICATION_ID, notification); 
 		String startCommand = intent.getStringExtra("State");
 		switch (startCommand) {
 		case "ON":
+			startForeground(NOTIFICATION_ID, notification); 
 			mediaPlayer.start();
 			setState(VolumeState.PLAYED.getStateVolume());
 			break;
 		case "OFF":
+			stopForeground(true);
 			mediaPlayer.pause();
 			setState(VolumeState.PAUSED.getStateVolume());
 			break;

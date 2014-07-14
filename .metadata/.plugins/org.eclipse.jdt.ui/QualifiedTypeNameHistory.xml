@@ -28,5 +28,7 @@
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.AudioPlayerService"/>
 <fullyQualifiedTypeName name="android.content.BroadcastReceiver"/>
 <fullyQualifiedTypeName name="android.content.IntentFilter"/>
+<fullyQualifiedTypeName name="android.app.Notification"/>
 <fullyQualifiedTypeName name="com.assigment2.audioplayer.MediaPlayerActivity"/>
+<fullyQualifiedTypeName name="android.app.PendingIntent"/>
 </qualifiedTypeNameHistroy>
